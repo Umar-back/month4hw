@@ -2,6 +2,7 @@ from rest_framework import serializers, generics, validators
 from .models import Director, Movie, Review
 from django.core.validators import MinValueValidator, MaxValueValidator
 from rest_framework.generics import CreateAPIView
+
 class DirectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Director
@@ -20,6 +21,7 @@ class DirectorDetailView(generics.RetrieveAPIView):
     lookup_field = 'id'
     lookup_value_regex = '[0-9]'
 
+
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
@@ -34,6 +36,7 @@ class MovieSerializer(serializers.ModelSerializer):
             MinValueValidator(0),
             MaxValueValidator(240)
         ]
+
 
 class MovieDetailView(generics.RetrieveAPIView):
     queryset = Movie.objects.all()
@@ -56,3 +59,18 @@ class ReviewSerializer(serializers.ModelSerializer):
             MinValueValidator(1),
             MaxValueValidator(10)
         ]
+
+
+class DirectorCreateView(CreateAPIView):
+    queryset = Director.objects.all()
+    serializer_class = DirectorSerializer
+
+
+class MovieCreateView(CreateAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+
+
+class ReviewCreateView(CreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer

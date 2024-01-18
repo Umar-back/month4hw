@@ -1,3 +1,6 @@
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework import generics
 from .models import Director, Movie, Review
@@ -45,7 +48,7 @@ class DirectorCreateView(LoginRequiredMixin, CreateAPIView):
     def get_serializer_class(self):
         if self.request.user.is_superuser:
             return DirectorSerializer
-        return DirectorSerializerReadOnly
+        return DirectorSerializer
 
 class DirectorUpdateView(UpdateAPIView):
     model = Director
@@ -54,8 +57,7 @@ class DirectorUpdateView(UpdateAPIView):
     def get_serializer_class(self):
         if self.request.user.is_superuser:
             return DirectorSerializer
-        return DirectorSerializerReadOnly
-
+        return DirectorSerializer
 
 class DirectorDeleteView(DestroyAPIView):
     model = Director
@@ -63,7 +65,7 @@ class DirectorDeleteView(DestroyAPIView):
     def get_serializer_class(self):
         if self.request.user.is_superuser:
             return DirectorSerializer
-        return DirectorSerializerReadOnly
+        return DirectorSerializer
 
 class MovieCreateView(LoginRequiredMixin, CreateAPIView):
     model = Movie
@@ -72,4 +74,21 @@ class MovieCreateView(LoginRequiredMixin, CreateAPIView):
     def get_serializer_class(self):
         if self.request.user.is_superuser:
             return MovieSerializer
-        return MovieSerializerReadOnly
+        return MovieSerializer
+
+
+@api_view(['GET', 'POST'])
+def test_api_view(request):
+    if request.method == 'GET':
+        dict_ = {
+            "text": 'hello',
+            "int": 100,
+            "float": 3.14,
+            "bool": True,
+            "list": [1, 2, 3],
+            "dict": {"a": 1, "b": 2},
+        }
+        return Response(data=dict_, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        print(request.data)
+        return Response()
