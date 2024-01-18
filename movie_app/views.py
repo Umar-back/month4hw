@@ -103,8 +103,8 @@ from .models import ConfirmationCode
 def register(request):
     if request.method == 'POST':
         email = request.POST['email']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
+        password1 = request.POST['123456']
+        password2 = request.POST['123456']
 
         if password1 != password2:
             return HttpResponse('Пароли не совпадают')
@@ -112,7 +112,7 @@ def register(request):
         user = User.objects.create_user(email, password1)
         code = ConfirmationCode.objects.create(user=user)
 
-        return render(request, 'registration/confirm.html', {'code': code.code})
+        return render(request, 'registration/confirmed.html', {'code': code.code})
 
     return render(request, 'registration/register.html')
 
