@@ -92,3 +92,39 @@ def test_api_view(request):
     elif request.method == 'POST':
         print(request.data)
         return Response()
+
+
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.contrib.auth.models import User
+from .models import ConfirmationCode
+
+
+def register(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+
+        if password1 != password2:
+            return HttpResponse('Пароли не совпадают')
+
+        user = User.objects.create_user(email, password1)
+        code = ConfirmationCode.objects.create(user=user)
+
+        return render(request, 'registration/confirm.html', {'code': code.code})
+
+    return render(request, 'registration/register.html')
+
+
+def confirm_user(request, code):
+    try:
+        code_obj = ConfirmationCode.objects.get(code=code)
+    except ConfirmationCode.DoesNotExist:
+        return HttpResponse('Код не найден', status=404)
+
+    user = code_obj.user
+    user.is_active = True
+    user.save()
+
+    return render(request, 'registration/confirmed.html')

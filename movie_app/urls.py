@@ -1,5 +1,9 @@
 from django.urls import path
+from . import views
 from .views import DirectorListView, DirectorDetailView, MovieListView, MovieDetailView, ReviewListView, ReviewDetailView, MovieReviewsView, DirectorUpdateView, DirectorDeleteView, DirectorCreateView
+
+
+
 
 
 urlpatterns = [
@@ -14,3 +18,13 @@ urlpatterns = [
     path('api/v1/directors/<int:id>/', DirectorUpdateView.as_view(), name='director_update'),
     path('api/v1/directors/<int:id>/', DirectorDeleteView.as_view(), name='director_delete'),
 ]
+
+
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('api/v1/users/confirm/<str:code>/', views.confirm_user, name='confirm-user'),
+]
+
